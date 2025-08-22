@@ -49,7 +49,7 @@ final class SearchUIKitViewController: UIViewController {
     
     // MARK: - Setup
     private func setupUI() {
-        title = "Search"
+        title = "بحث"
     
         view.backgroundColor = UIColor(AppTheme.bg)
         
@@ -58,7 +58,7 @@ final class SearchUIKitViewController: UIViewController {
         }
         
         searchBar.delegate = self
-        searchBar.placeholder = "Search..."
+        searchBar.placeholder = "ابحث..."
         searchBar.searchBarStyle = .minimal
         
         searchBar.backgroundColor = UIColor(AppTheme.searchBarBackground)
@@ -69,9 +69,14 @@ final class SearchUIKitViewController: UIViewController {
         textField.backgroundColor = UIColor(AppTheme.searchBarBackground)
         textField.textColor = UIColor(AppTheme.searchBarText)
         textField.attributedPlaceholder = NSAttributedString(
-            string:"Search...",
+            string:"ابحث...",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(AppTheme.searchBarPlaceholder)]
         )
+        
+        // تطبيق الخط العربي على search bar
+        if let font = UIFont(name: "IBMPlexSansArabic-Regular", size: 16) {
+            textField.font = font
+        }
         
         if let leftView = textField.leftView {
             leftView.tintColor = UIColor(AppTheme.searchBarPlaceholder)
@@ -116,6 +121,11 @@ final class SearchUIKitViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(AppTheme.searchBarPlaceholder)]
         )
         
+        // تطبيق الخط العربي على search bar
+        if let font = UIFont(name: "IBMPlexSansArabic-Regular", size: 16) {
+            textField.font = font
+        }
+        
         // Customize left view (search icon)
         if let leftView = textField.leftView {
             leftView.tintColor = UIColor(AppTheme.searchBarPlaceholder)
@@ -123,6 +133,13 @@ final class SearchUIKitViewController: UIViewController {
     }
     
     private func setupBindings() {
+        viewModel.$query
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] query in
+                self?.searchBar.text = query
+            }
+            .store(in: &cancellables)
+        
         viewModel.$results
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in

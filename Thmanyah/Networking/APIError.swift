@@ -14,10 +14,10 @@ enum APIError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .transport(let e): return "Network error: \(e.localizedDescription)"
-        case .invalidResponse: return "Invalid server response"
-        case .status(let code, _): return "HTTP Status: \(code)"
-        case .decoding(let e): return "Decoding error: \(e.localizedDescription)"
+        case .transport(let e): return "خطأ في الشبكة: \(e.localizedDescription)"
+        case .invalidResponse: return "استجابة خادم غير صالحة"
+        case .status(let code, _): return "خطأ HTTP: \(code)"
+        case .decoding(let e): return "خطأ في فك الترميز: \(e.localizedDescription)"
         }
     }
 }

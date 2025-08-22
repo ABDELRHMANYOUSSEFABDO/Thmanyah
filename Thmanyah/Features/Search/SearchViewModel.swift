@@ -50,8 +50,7 @@ final class SearchViewModel: ObservableObject {
                 self.results = response.results
             }
         } catch {
-            self.errorMessage = "An error occurred while searching."
-
+            self.errorMessage = "حدث خطأ أثناء البحث."
         }
     }
 }

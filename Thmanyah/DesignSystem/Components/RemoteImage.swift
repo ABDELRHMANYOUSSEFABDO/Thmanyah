@@ -36,10 +36,10 @@ struct RemoteImage: View, Equatable {
                     .overlay(
                         VStack(spacing: 4) {
                             Image(systemName: "photo")
-                                .font(.title2)
+                                .font(.brand(20, weight: .medium))
                                 .foregroundColor(AppTheme.subtle)
                             Text("فشل في تحميل الصور")
-                                .font(.caption2)
+                                .font(.brand(12))
                                 .foregroundColor(AppTheme.subtle)
                         }
                     )

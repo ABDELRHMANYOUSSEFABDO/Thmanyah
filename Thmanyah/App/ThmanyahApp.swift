@@ -32,12 +32,12 @@ struct RootView: View {
             TabView {
                 HomeView()
                     .tabItem { 
-                        Label("Home", systemImage: "square.grid.2x2")
+                        Label("الرئيسية", systemImage: "square.grid.2x2")
                     }
                 
                 SearchUIKitWrapper(viewModel: searchVM)
                     .tabItem { 
-                        Label("Search", systemImage: "magnifyingglass")
+                        Label("البحث", systemImage: "magnifyingglass")
                     }
             }
             .accentColor(AppTheme.tabBarIconSelected)

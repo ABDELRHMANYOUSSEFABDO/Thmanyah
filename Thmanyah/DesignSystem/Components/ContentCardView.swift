@@ -20,8 +20,10 @@ struct ContentCardView: View, Equatable {
                                startPoint: .top, endPoint: .bottom)
                     .cornerRadius(16)
                 VStack(alignment: .leading, spacing: 6) {
-                        Text(item.title).font(AppTheme.font(16, weight: .semibold))
-                            .foregroundColor(.white).lineLimit(2)
+                        Text(item.title)
+                            .font(.brand(16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .lineLimit(2)
                             .shadow(radius: 4)
                 }
                 .padding(12)
@@ -29,7 +31,7 @@ struct ContentCardView: View, Equatable {
 
             if let subtitle = item.subtitle {
                 Text(subtitle.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression))
-                    .font(AppTheme.font(13))
+                    .font(.brand(13))
                     .foregroundColor(AppTheme.subtle)
                     .lineLimit(2)
             }

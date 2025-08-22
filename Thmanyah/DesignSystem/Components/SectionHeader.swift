@@ -14,7 +14,7 @@ struct SectionHeader: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(title)
-                .font(AppTheme.font(22, weight: .bold))
+                .font(.brand(22, weight: .bold))
                 .foregroundColor(AppTheme.text)
                 .overlay(alignment: .bottomLeading) {
                     RoundedRectangle(cornerRadius: 2)
@@ -23,7 +23,7 @@ struct SectionHeader: View {
             Spacer()
             if let t = actionTitle, let act = action {
                 Button(t, action: { Haptics.tap(); act() })
-                    .font(AppTheme.font(13, weight: .semibold))
+                    .font(.brand(13, weight: .semibold))
                     .foregroundColor(AppTheme.tag)
             }
         }

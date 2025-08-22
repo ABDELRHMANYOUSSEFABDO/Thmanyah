@@ -9,7 +9,7 @@ struct TagCapsule: View {
     let text: String
     var body: some View {
         Text(text)
-            .font(AppTheme.font(11, weight: .semibold))
+            .font(.brand(11, weight: .semibold))
             .foregroundColor(.black)
             .padding(.horizontal, 8).padding(.vertical, 4)
             .background(AppTheme.tag).clipShape(Capsule())

@@ -12,7 +12,6 @@ enum BrandFontWeight {
 }
 
 extension Font {
-    /// IBM Plex Sans Arabic mapping (update names if needed after inspecting PostScript names).
     static func brand(_ size: CGFloat, weight: BrandFontWeight = .regular) -> Font {
         switch weight {
         case .regular: return .custom("IBMPlexSansArabic-Regular", size: size)

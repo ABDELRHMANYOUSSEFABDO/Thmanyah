@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct HomeView: View {
     @EnvironmentObject private var vm: HomeViewModel
     private let grid = [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)]
@@ -15,42 +14,52 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                AppTheme.bg
-                    .ignoresSafeArea(.container, edges: .top)
-                
+                AppTheme.bg.ignoresSafeArea()
                 if vm.isLoading {
                     ScrollView { VStack(spacing: 20) { ForEach(0..<4) { _ in placeholderSection } } }
                         .redacted(reason: .placeholder)
                         .scrollIndicators(.hidden)
                 } else if let error = vm.errorMessage {
                     VStack(spacing: 12) {
-                        Text(error).foregroundColor(AppTheme.subtle)
-                        Button("Retry") { Task { await vm.load() } }
-                            .buttonStyle(.borderedProminent)
-                            .tint(AppTheme.tag)
+                        Text(error)
+                            .font(.brand(15))
+                            .foregroundColor(AppTheme.subtle)
+                            .multilineTextAlignment(.center)
+                        Button("إعادة المحاولة") { 
+                            Haptics.tap(); 
+                            Task { await vm.load() } 
+                        }
+                        .font(.brand(16, weight: .semibold))
+                        .buttonStyle(.borderedProminent)
+                        .tint(AppTheme.tag)
                     }.padding()
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 22) {
                             ForEach(vm.sections) { section in
                                 SectionHeader(title: section.title)
+                                    .accessibilityIdentifier("home_section_\(section.title)")
                                 sectionView(section)
-                                    .id("section_\(section.id)")
                             }
                         }
                         .padding(.vertical, 8)
                     }
                     .scrollIndicators(.hidden)
-                    .refreshable { await vm.reload() }
+                    .refreshable { Haptics.tap(); await vm.load() }
                 }
             }
-            .navigationTitle("Home")
+            .navigationTitle("الرئيسية")
             .toolbarBackground(AppTheme.bg, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: SearchView().environmentObject(SearchViewModel())) {
+                        Image(systemName: "magnifyingglass")
+                    }
+                    .accessibilityIdentifier("home_nav_search")
+                }
+            }
         }
         .tint(AppTheme.tag)
-        .animation(.default, value: vm.sections)
-        .safeAreaBackground(AppTheme.bg, edges: .top)
     }
 
     @ViewBuilder
@@ -58,13 +67,10 @@ struct HomeView: View {
         switch section.layout {
         case .grid:
             LazyVGrid(columns: grid, spacing: 16) {
-                ForEach(section.items, id: \.id) { item in
+                ForEach(Array(section.items.enumerated()), id: \.0) { idx, item in
                     ContentCardView(item: item)
-                        .id("\(section.id)_\(item.id)")
-                        .onAppear { if item.id == section.items.last?.id {
-                         //   Task { await vm.loadMore(for: section)
-                         //   }
-                        } }
+                        .accessibilityIdentifier("content_card_\(section.order)_\(idx)")
+                        .onAppear { if idx == section.items.count - 1 { Task { await vm.loadMore(for: section) } } }
                 }
             }
             .padding(.horizontal)
@@ -72,14 +78,11 @@ struct HomeView: View {
         case .carousel, .queue:
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 14) {
-                    ForEach(section.items, id: \.id) { item in
+                    ForEach(Array(section.items.enumerated()), id: \.0) { idx, item in
                         ContentCardView(item: item)
                             .frame(width: 260)
-                            .id("\(section.id)_\(item.id)")
-                            .onAppear { if item.id == section.items.last?.id {
-                             //   Task { await vm.loadMore(for: section)
-                               // }
-                            } }
+                            .accessibilityIdentifier("content_card_\(section.order)_\(idx)")
+                            .onAppear { if idx == section.items.count - 1 { Task { await vm.loadMore(for: section) } } }
                     }
                 }
                 .padding(.horizontal)
@@ -87,27 +90,21 @@ struct HomeView: View {
 
         case .bigSquare:
             LazyVGrid(columns: [GridItem(.flexible())], spacing: 18) {
-                ForEach(section.items, id: \.id) { item in
+                ForEach(Array(section.items.enumerated()), id: \.0) { idx, item in
                     ContentCardView(item: item)
                         .frame(height: 220)
-                        .id("\(section.id)_\(item.id)")
-                        .onAppear { if item.id == section.items.last?.id {
-                           // Task { await vm.loadMore(for: section)
-                            //   }
-                        } }
+                        .accessibilityIdentifier("content_card_\(section.order)_\(idx)")
+                        .onAppear { if idx == section.items.count - 1 { Task { await vm.loadMore(for: section) } } }
                 }
             }
             .padding(.horizontal)
 
         case .twoLinesGrid:
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                ForEach(section.items, id: \.id) { item in
+                ForEach(Array(section.items.enumerated()), id: \.0) { idx, item in
                     ContentCardView(item: item)
-                        .id("\(section.id)_\(item.id)")
-                        .onAppear { if item.id == section.items.last?.id {
-                            //  Task { await vm.loadMore(for: section)
-                      //  }
-                        } }
+                        .accessibilityIdentifier("content_card_\(section.order)_\(idx)")
+                        .onAppear { if idx == section.items.count - 1 { Task { await vm.loadMore(for: section) } } }
                 }
             }
             .padding(.horizontal)
@@ -122,7 +119,7 @@ struct HomeView: View {
                 HStack(spacing: 12) {
                     ForEach(0..<4) { _ in
                         RoundedRectangle(cornerRadius: 16).fill(AppTheme.card)
-                            .frame(width: 240, height: 160)
+                            .frame(width: 240, height: 160).shimmering(true)
                     }
                 }.padding(.horizontal)
             }

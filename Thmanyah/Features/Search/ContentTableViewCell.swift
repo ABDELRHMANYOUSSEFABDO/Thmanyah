@@ -97,12 +97,22 @@ final class ContentTableViewCell: UITableViewCell {
         thumbnailImageView.tintColor = UIColor(AppTheme.subtle)
         thumbnailImageView.alpha = 0.5
         
-        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        // تطبيق الخط العربي على العنوان
+        if let titleFont = UIFont(name: "IBMPlexSansArabic-SemiBold", size: 18) {
+            titleLabel.font = titleFont
+        } else {
+            titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        }
         titleLabel.textColor = UIColor(AppTheme.text)
         titleLabel.numberOfLines = 2
         titleLabel.lineBreakMode = .byTruncatingTail
         
-        descriptionLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        // تطبيق الخط العربي على الوصف
+        if let descriptionFont = UIFont(name: "IBMPlexSansArabic-Regular", size: 14) {
+            descriptionLabel.font = descriptionFont
+        } else {
+            descriptionLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+        }
         descriptionLabel.textColor = UIColor(AppTheme.subtle)
         descriptionLabel.numberOfLines = 3
         descriptionLabel.lineBreakMode = .byTruncatingTail

@@ -44,7 +44,7 @@ final class HomeViewModel: ObservableObject {
                 sections = Self.merge(existing: sections, with: res.sections)
             }
         } catch {
-            if reset { errorMessage = "Unable to load content. Try again."}
+            if reset { errorMessage = "تعذر تحميل المحتوى. حاول مرة أخرى."}
         }
     }
 
