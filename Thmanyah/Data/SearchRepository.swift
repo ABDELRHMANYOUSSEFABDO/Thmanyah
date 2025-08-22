@@ -11,6 +11,10 @@ import Foundation
 
 struct SearchResponse: Decodable {
     let results: [ContentItem]
+    
+    init(results: [ContentItem]) {
+        self.results = results
+    }
 
     init(from decoder: Decoder) throws {
         do {
@@ -48,6 +52,14 @@ struct SearchSection: Decodable {
     let contentType: String
     let order: String
     let content: [ContentItem]
+    
+    init(name: String, type: String, contentType: String, order: String, content: [ContentItem]) {
+        self.name = name
+        self.type = type
+        self.contentType = contentType
+        self.order = order
+        self.content = content
+    }
     
     enum CodingKeys: String, CodingKey {
         case name, type, content, order

@@ -7,12 +7,28 @@
 import Foundation
 
 enum DI {
-    static func makeNetwork() -> NetworkClient { URLSessionNetworkClient() }
+    private static var isUITesting: Bool {
+        ProcessInfo.processInfo.arguments.contains("-UITEST_MOCK_API")
+    }
+    
+    static func makeNetwork() -> NetworkClient { 
+        isUITesting ? MockNetworkClient() : URLSessionNetworkClient() 
+    }
 
-    static func makeHomeRepo() -> HomeRepositoryType { HomeRepository(client: makeNetwork()) }
-    static func makeSearchRepo() -> SearchRepositoryType { SearchRepository(client: makeNetwork()) }
+    static func makeHomeRepo() -> HomeRepositoryType { 
+        isUITesting ? MockHomeRepository() : HomeRepository(client: makeNetwork()) 
+    }
+    
+    static func makeSearchRepo() -> SearchRepositoryType { 
+        isUITesting ? MockSearchRepository() : SearchRepository(client: makeNetwork()) 
+    }
 
-    static func makeFetchHomeSections() -> FetchHomeSectionsUseCaseType { FetchHomeSectionsUseCase(repo: makeHomeRepo()) }
-    static func makeSearchContent() -> SearchContentUseCaseType { SearchContentUseCase(repo: makeSearchRepo()) }
+    static func makeFetchHomeSections() -> FetchHomeSectionsUseCaseType { 
+        isUITesting ? MockFetchHomeSectionsUseCase() : FetchHomeSectionsUseCase(repo: makeHomeRepo()) 
+    }
+    
+    static func makeSearchContent() -> SearchContentUseCaseType { 
+        isUITesting ? MockSearchContentUseCase() : SearchContentUseCase(repo: makeSearchRepo()) 
+    }
 }
 

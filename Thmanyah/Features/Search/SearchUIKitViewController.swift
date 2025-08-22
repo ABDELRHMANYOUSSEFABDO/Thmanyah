@@ -13,9 +13,7 @@ final class SearchUIKitViewController: UIViewController {
     // MARK: - Outlets
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
-  //  @IBOutlet weak var emptyStateView: UIView!
    @IBOutlet weak var loadingView: UIActivityIndicatorView!
-//    @IBOutlet weak var errorLabel: UILabel!
     
     // MARK: - Properties
     private let viewModel: SearchViewModel
@@ -36,6 +34,7 @@ final class SearchUIKitViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupBindings()
+        loadingView.isHidden = true
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -73,8 +72,7 @@ final class SearchUIKitViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(AppTheme.searchBarPlaceholder)]
         )
         
-        // تطبيق الخط العربي على search bar
-        if let font = UIFont(name: "IBMPlexSansArabic-Regular", size: 16) {
+        if let font = AppTheme.uiFont(16, weight: .regular) {
             textField.font = font
         }
         
@@ -107,12 +105,10 @@ final class SearchUIKitViewController: UIViewController {
     }
     
     private func refreshSearchBarAppearance() {
-        // Ensure search bar styling is consistent
         searchBar.backgroundColor = UIColor(AppTheme.searchBarBackground)
         searchBar.barTintColor = UIColor(AppTheme.searchBarBackground)
         searchBar.tintColor = UIColor(AppTheme.searchBarText)
         
-        // Customize search bar text field
         let textField = searchBar.searchTextField
         textField.backgroundColor = UIColor(AppTheme.searchBarBackground)
         textField.textColor = UIColor(AppTheme.searchBarText)
@@ -121,8 +117,7 @@ final class SearchUIKitViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(AppTheme.searchBarPlaceholder)]
         )
         
-        // تطبيق الخط العربي على search bar
-        if let font = UIFont(name: "IBMPlexSansArabic-Regular", size: 16) {
+        if let font = AppTheme.uiFont(16, weight: .regular) {
             textField.font = font
         }
         
@@ -151,8 +146,11 @@ final class SearchUIKitViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isSearching in
                 if isSearching {
+                    self?.loadingView.isHidden  = false
                     self?.loadingView.startAnimating()
                 } else {
+                    self?.loadingView.isHidden  = true
+
                     self?.loadingView.stopAnimating()
                 }
             }
@@ -207,15 +205,34 @@ extension SearchUIKitViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0
+        return viewModel.results.isEmpty ? 0 : 50
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard !viewModel.results.isEmpty else { return nil }
+        
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "نتائج البحث"
+        titleLabel.font = AppTheme.uiFont(20, weight: .semibold)
+        titleLabel.textColor = .white
+        titleLabel.accessibilityIdentifier = "نتائج البحث"
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerView.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            titleLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+        ])
+        
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 12
-    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return nil
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

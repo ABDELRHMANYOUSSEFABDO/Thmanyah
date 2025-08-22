@@ -25,10 +25,17 @@ struct SearchView: View {
             }
             
             if !vm.results.isEmpty {
-                LazyVGrid(columns: grid, spacing: 16) {
-                    ForEach(Array(vm.results.enumerated()), id: \.1.id) { idx, item in
-                        ContentCardView(item: item)
-                            .accessibilityIdentifier("search_card_\(idx)")
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("نتائج البحث")
+                        .font(.brand(20, weight: .semibold))
+                        .foregroundColor(.primary)
+                        .accessibilityIdentifier("نتائج البحث")
+                    
+                    LazyVGrid(columns: grid, spacing: 16) {
+                        ForEach(Array(vm.results.enumerated()), id: \.1.id) { idx, item in
+                            ContentCardView(item: item)
+                                .accessibilityIdentifier("search_card_\(idx)")
+                        }
                     }
                 }
                 .padding(.horizontal)

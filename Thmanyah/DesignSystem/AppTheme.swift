@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 enum AppTheme {
     static func font(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
@@ -18,6 +19,11 @@ enum AppTheme {
         default:       map = .regular
         }
         return .brand(size, weight: map)
+    }
+    
+    // MARK: - UIKit Font Support
+    static func uiFont(_ size: CGFloat, weight: BrandFontWeight = .regular) -> UIFont? {
+        return UIFont.brand(size, weight: weight)
     }
 
     static let accent  = Color("AccentColor", bundle: .main)

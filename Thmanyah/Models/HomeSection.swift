@@ -89,6 +89,11 @@ struct Pagination: Decodable {
         case totalPages = "total_pages"
     }
     
+    init(nextPage: String?, totalPages: Int?) {
+        self.nextPage = nextPage
+        self.totalPages = totalPages
+    }
+    
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
                 
