@@ -1,0 +1,17 @@
+//
+//  Production.xcconfig
+//  Thmanyah
+//
+//  Created by Macbook on 20/08/2025.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+DOMAIN = api-v2-b2sit6oh3a-uc.a.run.app
+DOMAINSEARCH = mock.apidog.com
+
+API_BASE_URL = https:/$()/$(DOMAIN)
+SEARCH_BASE_URL =  https:/$()/$(DOMAINSEARCH)
+
+
